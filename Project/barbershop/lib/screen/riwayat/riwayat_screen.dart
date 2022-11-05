@@ -1,0 +1,87 @@
+import 'package:barbershop/models/booking_model.dart';
+import 'package:barbershop/providers/booking_provider.dart';
+import 'package:barbershop/screen/edit_booking/edit_booking_screen.dart';
+import 'package:barbershop/screen/riwayat/widget/riwayat_card.dart';
+import 'package:barbershop/utils/constants/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class RiwayatScreen extends StatelessWidget {
+  const RiwayatScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    BookingProvider bookingProvider =
+        Provider.of<BookingProvider>(context, listen: false);
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                'Riwayat Booking',
+                style: blackTextStyle.copyWith(
+                  fontSize: 24,
+                  fontWeight: semiBold,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              StreamBuilder<QuerySnapshot<Object?>>(
+                stream: bookingProvider.streamBooking(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    var data = snapshot.data!.docs;
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          final dataBooking =
+                              data[index].data() as Map<String, dynamic>;
+                          return RiwayatCard(
+                            BookingModel(
+                              namaPemesan: dataBooking['nama pemesan'],
+                              namaBarbershop: dataBooking['nama barbershop'],
+                              tanggal: dataBooking['tanggal'],
+                              jam: dataBooking['jam'],
+                              no: dataBooking['no pemesan'],
+                              pesan: dataBooking['pesan pemesan'],
+                            ),
+                            () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditBookingScreen(
+                                    idDoc: data[index].id,
+                                  ),
+                                ),
+                              );
+                            },
+                            () {
+                              bookingProvider.hapusData(data[index].id);
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
