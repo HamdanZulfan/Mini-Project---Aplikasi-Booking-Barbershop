@@ -1,20 +1,28 @@
 import 'package:barbershop/providers/booking_provider.dart';
-import 'package:barbershop/providers/home_provider.dart';
+import 'package:barbershop/service/home_service.dart';
+import 'package:barbershop/service/booking_service.dart';
 import 'package:barbershop/utils/constants/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class BookingDaftarScreen extends StatelessWidget {
+class BookingDaftarScreen extends StatefulWidget {
   final String idDoc;
   const BookingDaftarScreen({super.key, required this.idDoc});
 
   @override
+  State<BookingDaftarScreen> createState() => _BookingDaftarScreenState();
+}
+
+class _BookingDaftarScreenState extends State<BookingDaftarScreen> {
+  @override
   Widget build(BuildContext context) {
-    HomeProvider homeProvider =
-        Provider.of<HomeProvider>(context, listen: false);
-    BookingProvider bookingProvider =
-        Provider.of<BookingProvider>(context, listen: false);
+    // HomeProvider homeProvider =
+    //     Provider.of<HomeProvider>(context, listen: false);
+    BookingProvider bookingProvider = Provider.of<BookingProvider>(context);
+    final formKey = GlobalKey<FormState>();
+    HomeService homeService = HomeService();
+    BookingService bookingService = BookingService();
 
     return Scaffold(
       body: SafeArea(
@@ -45,11 +53,12 @@ class BookingDaftarScreen extends StatelessWidget {
                   height: 10,
                 ),
                 Form(
+                  key: formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       FutureBuilder<DocumentSnapshot<Object?>>(
-                        future: homeProvider.getByIDDaftar(idDoc),
+                        future: homeService.getByIDDaftar(widget.idDoc),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.done) {
@@ -100,6 +109,12 @@ class BookingDaftarScreen extends StatelessWidget {
                             fontSize: 14,
                           ),
                         ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Nama tidak boleh kosong';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(
                         height: 10,
@@ -126,6 +141,12 @@ class BookingDaftarScreen extends StatelessWidget {
                             fontSize: 14,
                           ),
                         ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'No tidak boleh kosong';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(
                         height: 10,
@@ -158,6 +179,12 @@ class BookingDaftarScreen extends StatelessWidget {
                                 fontSize: 14,
                               ),
                             ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Tanggal tidak boleh kosong';
+                              }
+                              return null;
+                            },
                           );
                         },
                       ),
@@ -192,6 +219,12 @@ class BookingDaftarScreen extends StatelessWidget {
                                 fontSize: 14,
                               ),
                             ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Jam tidak boleh kosong';
+                              }
+                              return null;
+                            },
                           );
                         },
                       ),
@@ -220,6 +253,12 @@ class BookingDaftarScreen extends StatelessWidget {
                             fontSize: 14,
                           ),
                         ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Pesan tidak boleh kosong';
+                          }
+                          return null;
+                        },
                       ),
                       Container(
                         padding: const EdgeInsets.only(top: 20),
@@ -227,32 +266,34 @@ class BookingDaftarScreen extends StatelessWidget {
                         width: 400,
                         child: ElevatedButton(
                           onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Konfirmasi'),
-                                content: SingleChildScrollView(
-                                  child: Text(
-                                    'Apakah anda yakin data yang dimasukan sudah benar ?',
-                                    style: blackTextStyle,
+                            if (formKey.currentState!.validate()) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Konfirmasi'),
+                                  content: SingleChildScrollView(
+                                    child: Text(
+                                      'Apakah anda yakin data yang dimasukan sudah benar ?',
+                                      style: blackTextStyle,
+                                    ),
                                   ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        bookingService.tambahData(context);
+                                      },
+                                      child: const Text('Ya'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Tidak'),
+                                    ),
+                                  ],
                                 ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      bookingProvider.tambahData(context);
-                                    },
-                                    child: const Text('Ya'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Tidak'),
-                                  ),
-                                ],
-                              ),
-                            );
+                              );
+                            }
                           },
                           style: TextButton.styleFrom(
                             backgroundColor: kPrimaryColor,

@@ -1,4 +1,5 @@
 import 'package:barbershop/providers/booking_provider.dart';
+import 'package:barbershop/service/booking_service.dart';
 import 'package:barbershop/utils/constants/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +14,13 @@ class EditBookingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BookingProvider bookingProvider =
-        Provider.of<BookingProvider>(context, listen: false);
+    BookingProvider bookingProvider = Provider.of<BookingProvider>(context);
+    BookingService bookingService = BookingService();
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: FutureBuilder<DocumentSnapshot<Object?>>(
-            future: bookingProvider.getBookingByID(idDoc),
+            future: bookingService.getBookingByID(idDoc),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 final data = snapshot.data!.data() as Map<String, dynamic>;
@@ -238,7 +239,7 @@ class EditBookingScreen extends StatelessWidget {
                                       actions: [
                                         TextButton(
                                           onPressed: () {
-                                            bookingProvider.updateBooking(
+                                            bookingService.updateBooking(
                                                 idDoc, context);
                                           },
                                           child: const Text('Ya'),

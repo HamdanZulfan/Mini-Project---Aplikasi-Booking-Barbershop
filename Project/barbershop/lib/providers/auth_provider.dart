@@ -20,9 +20,9 @@ class AuthProvider extends ChangeNotifier {
       showTextMessage(context, 'Akun berhasil dibuat');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        showTextMessage(context, 'The password provided is too weak.');
+        showTextMessage(context, 'Kata sandi terlalu lemah');
       } else if (e.code == 'email-already-in-use') {
-        showTextMessage(context, 'The account already exists for that email.');
+        showTextMessage(context, 'Akun berikut sudah terdaftar');
       }
     } catch (e) {
       return;
@@ -35,28 +35,28 @@ class AuthProvider extends ChangeNotifier {
         email: email,
         password: password,
       );
-      Navigator.of(context).pushAndRemoveUntil(
+      Navigator.pushReplacement(
+        context,
         MaterialPageRoute(
           builder: (context) => const NavbarScreen(),
         ),
-        (Route<dynamic> route) => false,
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        showTextMessage(context, 'No user found for that email.');
+        showTextMessage(context, 'Email tidak ditemukan');
       } else if (e.code == 'wrong-password') {
-        showTextMessage(context, 'Wrong password provided for that user');
+        showTextMessage(context, 'Kata sandi yang anda masukan salah');
       }
     }
   }
 
   void logOut(context) async {
     await auth.signOut();
-    Navigator.of(context).pushAndRemoveUntil(
+    Navigator.pushReplacement(
+      context,
       MaterialPageRoute(
         builder: (context) => const WelcomeScreen(),
       ),
-      (Route<dynamic> route) => false,
     );
   }
 

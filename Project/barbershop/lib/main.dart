@@ -1,6 +1,5 @@
 import 'package:barbershop/providers/auth_provider.dart';
 import 'package:barbershop/providers/booking_provider.dart';
-import 'package:barbershop/providers/home_provider.dart';
 import 'package:barbershop/providers/navbar_provider.dart';
 import 'package:barbershop/screen/auth/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,9 +24,6 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => NavBarProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => HomeProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => BookingProvider(),

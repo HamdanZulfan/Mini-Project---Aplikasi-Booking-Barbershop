@@ -1,9 +1,8 @@
-import 'package:barbershop/providers/home_provider.dart';
+import 'package:barbershop/service/home_service.dart';
 import 'package:barbershop/screen/booking/booking_rekomendasi_screen.dart';
 import 'package:barbershop/utils/constants/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailRekomendasiScreen extends StatelessWidget {
@@ -20,14 +19,13 @@ class DetailRekomendasiScreen extends StatelessWidget {
       }
     }
 
-    HomeProvider homeProvider =
-        Provider.of<HomeProvider>(context, listen: false);
+    HomeService homeService = HomeService();
 
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: FutureBuilder<DocumentSnapshot<Object?>>(
-            future: homeProvider.getByIDRekomendasi(idDoc),
+            future: homeService.getByIDRekomendasi(idDoc),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 var datas = snapshot.data!;

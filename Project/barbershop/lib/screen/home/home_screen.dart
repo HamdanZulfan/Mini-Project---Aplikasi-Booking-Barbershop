@@ -1,5 +1,5 @@
 import 'package:barbershop/models/barbershop_model.dart';
-import 'package:barbershop/providers/home_provider.dart';
+import 'package:barbershop/service/home_service.dart';
 import 'package:barbershop/screen/detail_barbershop/detail_daftar_screen.dart';
 import 'package:barbershop/screen/detail_barbershop/detail_rekomendasi_screen.dart';
 import 'package:barbershop/screen/home/widgets/daftar_card.dart';
@@ -7,15 +7,16 @@ import 'package:barbershop/screen/home/widgets/rekomendasi_card.dart';
 import 'package:barbershop/utils/constants/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    HomeProvider homeProvider =
-        Provider.of<HomeProvider>(context, listen: false);
+    // HomeProvider homeProvider =
+    //     Provider.of<HomeProvider>(context, listen: false);
+
+    HomeService homeService = HomeService();
 
     return Scaffold(
       body: SafeArea(
@@ -54,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 StreamBuilder<QuerySnapshot<Object?>>(
-                  stream: homeProvider.streamRekomendasi(),
+                  stream: homeService.streamRekomendasi(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.active) {
                       var data = snapshot.data!.docs;
@@ -106,7 +107,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 StreamBuilder<QuerySnapshot<Object?>>(
-                  stream: homeProvider.streamDaftar(),
+                  stream: homeService.streamDaftar(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.active) {
                       var data = snapshot.data!.docs;

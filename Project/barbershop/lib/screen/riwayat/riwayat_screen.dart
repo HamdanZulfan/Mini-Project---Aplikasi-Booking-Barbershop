@@ -1,19 +1,17 @@
 import 'package:barbershop/models/booking_model.dart';
-import 'package:barbershop/providers/booking_provider.dart';
 import 'package:barbershop/screen/edit_booking/edit_booking_screen.dart';
 import 'package:barbershop/screen/riwayat/widget/riwayat_card.dart';
+import 'package:barbershop/service/booking_service.dart';
 import 'package:barbershop/utils/constants/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class RiwayatScreen extends StatelessWidget {
   const RiwayatScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    BookingProvider bookingProvider =
-        Provider.of<BookingProvider>(context, listen: false);
+    BookingService bookingService = BookingService();
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -35,7 +33,7 @@ class RiwayatScreen extends StatelessWidget {
                 height: 20,
               ),
               StreamBuilder<QuerySnapshot<Object?>>(
-                stream: bookingProvider.streamBooking(),
+                stream: bookingService.streamBooking(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.active) {
                     var data = snapshot.data!.docs;
@@ -65,7 +63,7 @@ class RiwayatScreen extends StatelessWidget {
                               );
                             },
                             () {
-                              bookingProvider.hapusData(data[index].id);
+                              bookingService.hapusData(data[index].id);
                             },
                           );
                         },
