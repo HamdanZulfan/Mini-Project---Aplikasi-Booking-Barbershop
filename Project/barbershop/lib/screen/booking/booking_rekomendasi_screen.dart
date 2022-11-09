@@ -13,7 +13,8 @@ class BookingRekomendasiScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BookingProvider bookingProvider = Provider.of<BookingProvider>(context);
+    BookingProvider bookingProvider =
+        Provider.of<BookingProvider>(context, listen: false);
     final formKey = GlobalKey<FormState>();
     HomeService homeService = HomeService();
     BookingService bookingService = BookingService();

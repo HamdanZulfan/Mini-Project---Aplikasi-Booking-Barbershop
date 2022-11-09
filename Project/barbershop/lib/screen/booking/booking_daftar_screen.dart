@@ -19,7 +19,8 @@ class _BookingDaftarScreenState extends State<BookingDaftarScreen> {
   Widget build(BuildContext context) {
     // HomeProvider homeProvider =
     //     Provider.of<HomeProvider>(context, listen: false);
-    BookingProvider bookingProvider = Provider.of<BookingProvider>(context);
+    BookingProvider bookingProvider =
+        Provider.of<BookingProvider>(context, listen: false);
     final formKey = GlobalKey<FormState>();
     HomeService homeService = HomeService();
     BookingService bookingService = BookingService();
