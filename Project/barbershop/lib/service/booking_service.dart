@@ -7,12 +7,12 @@ import 'package:provider/provider.dart';
 
 class BookingService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  TextEditingController namaPemesan = TextEditingController();
-  TextEditingController namaBarbershop = TextEditingController();
-  TextEditingController noPemesan = TextEditingController();
-  TextEditingController pesanPemesan = TextEditingController();
-  TextEditingController tanggalPemesan = TextEditingController();
-  TextEditingController jamPemesan = TextEditingController();
+  // TextEditingController namaPemesan = TextEditingController();
+  // TextEditingController namaBarbershop = TextEditingController();
+  // TextEditingController noPemesan = TextEditingController();
+  // TextEditingController pesanPemesan = TextEditingController();
+  // TextEditingController tanggalPemesan = TextEditingController();
+  // TextEditingController jamPemesan = TextEditingController();
 
   void tambahData(context) async {
     CollectionReference booking = firestore.collection("booking");
